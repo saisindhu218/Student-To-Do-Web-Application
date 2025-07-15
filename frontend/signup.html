@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up | Student To-Do</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Create Your Account</h1>
+    <p class="subtitle">Start managing your study tasks!</p>
+
+    <div class="input-group">
+      <input type="text" id="newUsername" placeholder="Create Username" />
+      <input type="password" id="newPassword" placeholder="Create Password" />
+      <button onclick="register()">Sign Up</button>
+      <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+  </div>
+
+  <script>
+    function register() {
+      const username = document.getElementById('newUsername').value.trim();
+      const password = document.getElementById('newPassword').value.trim();
+
+      if (!username || !password) {
+        alert("Username and password are required!");
+        return;
+      }
+
+      fetch('http://localhost:5000/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        if (data.message.includes("successfully")) {
+          localStorage.setItem('username', username);
+          window.location.href = 'index.html';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

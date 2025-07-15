@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>To-Do | Add Task</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1 id="pageTitle">Welcome</h1>
+    <p class="subtitle">Add your new study task</p>
+
+    <div class="input-group">
+      <input type="text" id="taskInput" placeholder="Enter a new task..." />
+      <button onclick="submitTask()">Add Task</button>
+    </div>
+
+    <br />
+    <a href="tasks.html"><button>📋 View All Tasks</button></a>
+    <br /><br />
+    <button onclick="logout()">🚪 Logout</button>
+  </div>
+
+  <script>
+    const username = localStorage.getItem('username');
+    if (!username) {
+      alert("Please login first!");
+      window.location.href = 'login.html';
+    } else {
+      document.getElementById('pageTitle').innerText = `${username}'s To-Do List 📘`;
+    }
+
+    function submitTask() {
+      const title = document.getElementById('taskInput').value.trim();
+      if (!title) {
+        alert("Enter a task!");
+        return;
+      }
+
+      fetch('http://localhost:5000/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, username })
+      })
+      .then(res => res.json())
+      .then(() => {
+        window.location.href = 'tasks.html';
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem('username');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>
